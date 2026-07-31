@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#55cbd1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="派派工作台" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>派派的海底工作台</title>
+  <link rel="stylesheet" href="styles.css?v=3" />
+</head>
+<body>
+  <main class="ocean" id="ocean">
+    <div class="sun-rays"></div>
+    <div class="grain"></div>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" id="todayDate"></p>
+        <h1>派派的海底工作台</h1>
+      </div>
+      <div class="day-score">
+        <span>今日航程</span>
+        <strong id="overallScore">0%</strong>
+      </div>
+    </header>
+
+    <nav class="simple-nav" aria-label="主要功能">
+      <button data-panel="today"><i>⚓</i><span>今日</span></button>
+      <button data-panel="work"><i>✎</i><span>工作</span></button>
+      <button data-panel="ielts"><i>◀</i><span>IELTS</span></button>
+      <button data-panel="news"><i>◌</i><span>新闻</span></button>
+      <button data-panel="ai"><i>✦</i><span>AI</span></button>
+      <button data-panel="water"><i>○</i><span>喝水</span></button>
+      <button data-panel="growth"><i>❉</i><span>成长</span></button>
+      <button data-panel="review"><i>☾</i><span>复盘</span></button>
+    </nav>
+
+    <section class="world" aria-label="海底功能地图">
+      <button class="landmark ship" data-panel="today" aria-label="今日">
+        <span class="flag">PAIPAI</span>
+        <span class="cabin">⚓</span>
+        <span class="hull"><i></i><i></i><i></i></span>
+        <span class="wake"></span>
+        <span class="landmark-label">今日</span>
+      </button>
+
+      <button class="landmark notebook" data-panel="work" aria-label="工作">
+        <span class="paper-lines">✓<br>□<br>□</span>
+        <span class="pencil"></span>
+        <span class="landmark-label">工作 <b id="taskBadge">0/0</b></span>
+      </button>
+
+      <button class="landmark fish-school" data-panel="ielts" aria-label="IELTS">
+        <span class="fish f1">◀</span><span class="fish f2">◀</span>
+        <span class="fish f3">◀</span><span class="fish f4">◀</span>
+        <span class="fish f5">◀</span><span class="fish f6">◀</span>
+        <span class="landmark-label">IELTS <b id="wordBadge">0/50</b></span>
+      </button>
+
+      <button class="landmark jellyfish" data-panel="news" aria-label="新闻">
+        <span class="jelly-body">◡</span><span class="tentacles">〰 〰 〰</span>
+        <span class="landmark-label">新闻</span>
+      </button>
+
+      <button class="landmark submarine" data-panel="ai" aria-label="AI">
+        <span class="antenna">✦</span><span class="sub-body">AI</span>
+        <span class="bubbles">○ ·</span>
+        <span class="landmark-label">AI</span>
+      </button>
+
+      <button class="landmark bottle" data-panel="water" aria-label="喝水">
+        <span class="bottle-cap"></span>
+        <span class="water-fill" id="mapWaterFill"></span>
+        <span class="landmark-label">喝水 <b id="waterBadge">0%</b></span>
+      </button>
+
+      <button class="landmark coral" data-panel="growth" aria-label="成长">
+        <span class="branch b1"></span><span class="branch b2"></span>
+        <span class="branch b3"></span><span class="branch b4"></span>
+        <span class="landmark-label">成长</span>
+      </button>
+
+      <button class="landmark shell" data-panel="review" aria-label="复盘">
+        <span class="moon">☾</span><span class="shell-shape">◔</span>
+        <span class="landmark-label">复盘</span>
+      </button>
+
+      <div class="seabed" aria-hidden="true">
+        <span class="weed w1"></span><span class="weed w2"></span>
+        <span class="weed w3"></span><span class="starfish">★</span>
+        <span class="stones">●　●　●</span>
+      </div>
+    </section>
+
+    <aside class="panel" id="panel" aria-hidden="true">
+      <button class="close-panel" id="closePanel" aria-label="关闭">×</button>
+      <div id="panelContent"></div>
+    </aside>
+    <div class="overlay" id="overlay"></div>
+
+    <p class="daily-note" id="dailyNote">慢慢游，也是在向前。</p>
+  </main>
+
+  <template id="todayTemplate">
+    <div class="panel-heading"><span>⚓</span><div><small>今日</small><h2>今天的航程</h2></div></div>
+    <div class="summary-grid">
+      <div class="summary-card"><small>工作</small><strong id="todayTasks">0/0</strong><span>完成事项</span></div>
+      <div class="summary-card"><small>单词</small><strong id="todayWords">0/50</strong><span>今日新词</span></div>
+      <div class="summary-card"><small>喝水</small><strong id="todayWater">0 ml</strong><span>目标 2000 ml</span></div>
+    </div>
+    <h3>今日重点</h3>
+    <div id="todayPriorityList" class="mini-list"></div>
+  </template>
+
+  <template id="workTemplate">
+    <div class="panel-heading"><span>✎</span><div><small>工作</small><h2>今天要做什么？</h2></div></div>
+    <form class="add-form" id="taskForm">
+      <input id="taskInput" maxlength="80" placeholder="写下一项工作…" autocomplete="off" />
+      <button type="submit">添加</button>
+    </form>
+    <div class="task-options">
+      <label><input type="checkbox" id="priorityInput" /> 设为重点工作</label>
+      <span>重点最多显示 3 项</span>
+    </div>
+    <div id="taskList" class="task-list"></div>
+  </template>
+
+  <template id="ieltsTemplate">
+    <div class="panel-heading"><span>◀</span><div><small>IELTS</small><h2>今天也向前一点</h2></div></div>
+    <div class="word-progress">
+      <div><strong id="wordCount">0</strong><span>/ 50 个单词</span></div>
+      <input type="range" id="wordRange" min="0" max="50" value="0" />
+    </div>
+    <p class="source-note">词汇计划：刘洪波《雅思词汇真经》。正式词库需导入你合法持有的版本内容。</p>
+    <h3>听说读写</h3>
+    <div class="skill-checks" id="skillChecks">
+      <label><input type="checkbox" data-skill="听力" /><span>🎧</span>听力</label>
+      <label><input type="checkbox" data-skill="口语" /><span>🐬</span>口语</label>
+      <label><input type="checkbox" data-skill="阅读" /><span>🐢</span>阅读</label>
+      <label><input type="checkbox" data-skill="写作" /><span>🐙</span>写作</label>
+    </div>
+  </template>
+
+  <template id="waterTemplate">
+    <div class="panel-heading"><span>◌</span><div><small>喝水</small><h2>给身体补充一点海水能量</h2></div></div>
+    <div class="water-meter">
+      <div class="meter-glass"><span id="panelWaterFill"></span><b id="waterAmount">0</b><small>ml</small></div>
+      <div><strong id="waterPercent">0%</strong><p>今日目标 2000 ml</p></div>
+    </div>
+    <div class="water-buttons">
+      <button data-water="100">+100 ml</button><button data-water="250">+250 ml</button>
+      <button data-water="350">+350 ml</button><button data-water="500">+500 ml</button>
+    </div>
+    <button class="text-button" id="resetWater">清空今日记录</button>
+  </template>
+
+  <template id="reviewTemplate">
+    <div class="panel-heading"><span>☾</span><div><small>复盘</small><h2>今晚，在码头停一停</h2></div></div>
+    <label class="field-label">今天的心情</label>
+    <div class="moods" id="moods">
+      <button data-mood="平静">😌</button><button data-mood="开心">😊</button>
+      <button data-mood="疲惫">😮‍💨</button><button data-mood="低落">🌧️</button>
+    </div>
+    <label class="field-label" for="reviewText">今天值得记住什么？</label>
+    <textarea id="reviewText" rows="7" placeholder="写下一点收获、感受或明天想调整的事情…"></textarea>
+    <button class="primary-button" id="saveReview">保存复盘</button>
+    <p class="save-hint" id="reviewHint"></p>
+  </template>
+
+  <template id="infoTemplate">
+    <div class="panel-heading"><span id="infoIcon">◌</span><div><small id="infoSmall"></small><h2 id="infoTitle"></h2></div></div>
+    <div class="feed-toolbar">
+      <div class="feed-tabs" id="feedTabs"></div>
+      <button class="feed-refresh" id="feedRefresh">↻ 刷新</button>
+    </div>
+    <p class="feed-status" id="feedStatus">正在潜入信息海域…</p>
+    <div class="live-feed" id="liveFeed"></div>
+  </template>
+
+  <script src="app.js?v=4"></script>
+</body>
+</html>
