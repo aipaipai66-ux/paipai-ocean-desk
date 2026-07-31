@@ -171,12 +171,12 @@
 
   <template id="infoTemplate">
     <div class="panel-heading"><span id="infoIcon">◌</span><div><small id="infoSmall"></small><h2 id="infoTitle"></h2></div></div>
-    <div class="empty-state">
-      <span id="emptyArt">◌</span>
-      <h3 id="emptyTitle"></h3>
-      <p id="emptyText"></p>
-      <button class="primary-button" id="demoRefresh">刷新内容</button>
+    <div class="feed-toolbar">
+      <div class="feed-tabs" id="feedTabs"></div>
+      <button class="feed-refresh" id="feedRefresh">↻ 刷新</button>
     </div>
+    <p class="feed-status" id="feedStatus">正在潜入信息海域…</p>
+    <div class="live-feed" id="liveFeed"></div>
   </template>
 
   <script src="app.js"></script>

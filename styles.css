@@ -251,6 +251,22 @@ textarea { width:100%; margin:9px 0 14px; padding:13px; resize:vertical; border:
 .empty-state h3 { font-size:19px; }
 .empty-state p { max-width:320px; margin:0 auto 24px; font-size:13px; line-height:1.8; opacity:.72; }
 
+.feed-toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.feed-tabs { display:flex; gap:6px; }
+.feed-tabs button,.feed-refresh { padding:7px 11px; border:2px solid rgba(40,92,101,.38); border-radius:12px; color:var(--ink); background:rgba(255,255,255,.28); cursor:pointer; font-size:12px; }
+.feed-tabs button.active { border-color:var(--ink); background:var(--yellow); font-weight:700; }
+.feed-refresh:disabled { opacity:.45; cursor:wait; }
+.feed-status { min-height:20px; margin:8px 2px 13px; font-size:11px; opacity:.62; }
+.live-feed { display:grid; gap:10px; }
+.feed-item { display:block; padding:13px 14px; border:2px solid rgba(40,92,101,.3); border-radius:14px 18px 13px 16px; color:var(--ink); background:rgba(255,255,255,.32); text-decoration:none; transition:.2s ease; }
+.feed-item:hover { transform:translateY(-2px); border-color:var(--ink); background:rgba(255,255,255,.5); }
+.feed-item h3 { margin:0 0 7px; font-size:14px; line-height:1.55; }
+.feed-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:10px; opacity:.62; }
+.feed-source { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.feed-error { padding:28px 15px; text-align:center; border:2px dashed rgba(40,92,101,.35); border-radius:16px; }
+.feed-error strong { display:block; margin-bottom:8px; }
+.feed-error p { margin:0; font-size:12px; line-height:1.7; opacity:.65; }
+
 @media (max-width: 850px) {
   .topbar { padding:20px 20px 0; }
   .day-score span { display:none; }

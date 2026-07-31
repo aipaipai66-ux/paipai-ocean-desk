@@ -33,20 +33,19 @@ const overlay = document.querySelector("#overlay");
 const infoPanels = {
   news: {
     icon: "◌", small: "新闻", title: "今天，世界发生了什么？",
-    art: "◌ ◌", heading: "实时资讯入口已准备好",
-    text: "这里将接入国内与国际可靠新闻源，显示简短摘要、发布时间与原文链接。当前版本不使用虚构的“最新新闻”。"
+    tabs: [{ id: "china", label: "国内" }, { id: "world", label: "国际" }]
   },
   ai: {
     icon: "✦", small: "AI", title: "看看 AI 又向前走了多远",
-    art: "⚙", heading: "AI 前沿入口已准备好",
-    text: "这里将汇集模型发布、AI 产品、研究论文和政策变化，并标出每条资讯对派派的实际价值。"
+    tabs: [{ id: "ai", label: "最新" }, { id: "popular", label: "热门" }]
   },
   growth: {
     icon: "❉", small: "成长", title: "让能力像珊瑚一样生长",
-    art: "♨", heading: "今天想成长一点什么？",
-    text: "后续可以记录阅读、课程、输出作品和正在培养的能力。第一版先保持简单，不制造额外任务压力。"
+    tabs: [{ id: "growth", label: "成长" }]
   }
 };
+
+let activeFeedTab = "";
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -232,13 +231,127 @@ function renderInfo(type) {
   document.querySelector("#infoIcon").textContent = data.icon;
   document.querySelector("#infoSmall").textContent = data.small;
   document.querySelector("#infoTitle").textContent = data.title;
-  document.querySelector("#emptyArt").textContent = data.art;
-  document.querySelector("#emptyTitle").textContent = data.heading;
-  document.querySelector("#emptyText").textContent = data.text;
-  document.querySelector("#demoRefresh").addEventListener("click", event => {
-    event.currentTarget.textContent = "等待接入实时数据";
-    event.currentTarget.disabled = true;
+  const tabs = document.querySelector("#feedTabs");
+  tabs.innerHTML = data.tabs.map((tab, index) =>
+    `<button data-feed-tab="${tab.id}" class="${index === 0 ? "active" : ""}">${tab.label}</button>`
+  ).join("");
+  activeFeedTab = data.tabs[0].id;
+  tabs.querySelectorAll("button").forEach(button => {
+    button.addEventListener("click", () => {
+      tabs.querySelectorAll("button").forEach(item => item.classList.remove("active"));
+      button.classList.add("active");
+      activeFeedTab = button.dataset.feedTab;
+      loadLiveFeed(type, activeFeedTab);
+    });
   });
+  document.querySelector("#feedRefresh").addEventListener("click", () => loadLiveFeed(type, activeFeedTab));
+  loadLiveFeed(type, activeFeedTab);
+}
+
+async function loadLiveFeed(type, tab) {
+  const feed = document.querySelector("#liveFeed");
+  const status = document.querySelector("#feedStatus");
+  const refresh = document.querySelector("#feedRefresh");
+  if (!feed || !status) return;
+  refresh.disabled = true;
+  status.textContent = "正在获取最新内容…";
+  feed.innerHTML = `<div class="empty-list">鱼群正在带回消息…</div>`;
+  try {
+    let items = [];
+    if (type === "news") items = await fetchGdeltNews(tab);
+    else if (type === "ai") items = await fetchAiNews(tab);
+    else items = getGrowthIdeas();
+    renderFeedItems(items);
+    status.textContent = `更新于 ${new Intl.DateTimeFormat("zh-CN", { hour: "2-digit", minute: "2-digit" }).format(new Date())} · 点击标题查看原文`;
+  } catch (error) {
+    feed.innerHTML = `<div class="feed-error"><strong>暂时没有捕捉到信号</strong><p>数据源可能繁忙或当前网络限制了访问。稍后点击“刷新”重试。</p></div>`;
+    status.textContent = "实时数据获取失败";
+  } finally {
+    refresh.disabled = false;
+  }
+}
+
+async function fetchGdeltNews(region) {
+  const query = region === "china"
+    ? "sourcecountry:china"
+    : "(sourcecountry:unitedstates OR sourcecountry:unitedkingdom OR sourcecountry:japan OR sourcecountry:france OR sourcecountry:germany)";
+  const params = new URLSearchParams({
+    query,
+    mode: "artlist",
+    maxrecords: "12",
+    format: "json",
+    sort: "datedesc",
+    timespan: "24h"
+  });
+  const response = await fetch(`https://api.gdeltproject.org/api/v2/doc/doc?${params}`);
+  if (!response.ok) throw new Error(`GDELT ${response.status}`);
+  const data = await response.json();
+  return (data.articles || []).slice(0, 10).map(article => ({
+    title: article.title || "未命名新闻",
+    url: article.url,
+    source: article.domain || article.sourcecountry || "GDELT",
+    date: parseGdeltDate(article.seendate)
+  }));
+}
+
+async function fetchAiNews(mode) {
+  const endpoint = mode === "popular" ? "search" : "search_by_date";
+  const params = new URLSearchParams({
+    query: "AI OR artificial intelligence OR LLM",
+    tags: "story",
+    hitsPerPage: "12"
+  });
+  const response = await fetch(`https://hn.algolia.com/api/v1/${endpoint}?${params}`);
+  if (!response.ok) throw new Error(`HN ${response.status}`);
+  const data = await response.json();
+  return (data.hits || []).filter(item => item.title && (item.url || item.objectID)).slice(0, 10).map(item => ({
+    title: item.title,
+    url: item.url || `https://news.ycombinator.com/item?id=${item.objectID}`,
+    source: item.url ? new URL(item.url).hostname.replace(/^www\./, "") : "Hacker News",
+    date: formatRelativeDate(item.created_at)
+  }));
+}
+
+function getGrowthIdeas() {
+  return [
+    { title: "阅读20分钟，并写下一个新观点", url: "#", source: "今日建议", date: "约20分钟" },
+    { title: "用自己的话解释一个刚学会的概念", url: "#", source: "输出练习", date: "约10分钟" },
+    { title: "回顾本周最想提升的一项能力", url: "#", source: "成长复盘", date: "约5分钟" }
+  ];
+}
+
+function renderFeedItems(items) {
+  const feed = document.querySelector("#liveFeed");
+  if (!items.length) {
+    feed.innerHTML = `<div class="empty-list">这一刻没有找到新内容。</div>`;
+    return;
+  }
+  feed.innerHTML = items.map(item => `
+    <a class="feed-item" href="${escapeAttribute(item.url)}" target="_blank" rel="noopener noreferrer">
+      <h3>${escapeHtml(item.title)}</h3>
+      <div class="feed-meta"><span class="feed-source">${escapeHtml(item.source)}</span><time>${escapeHtml(item.date)}</time></div>
+    </a>
+  `).join("");
+}
+
+function parseGdeltDate(value) {
+  if (!value || value.length < 14) return "刚刚";
+  const date = new Date(`${value.slice(0,4)}-${value.slice(4,6)}-${value.slice(6,8)}T${value.slice(8,10)}:${value.slice(10,12)}:${value.slice(12,14)}Z`);
+  return formatRelativeDate(date);
+}
+
+function formatRelativeDate(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  const minutes = Math.max(0, Math.round((Date.now() - date.getTime()) / 60000));
+  if (minutes < 60) return `${minutes || 1}分钟前`;
+  if (minutes < 1440) return `${Math.round(minutes / 60)}小时前`;
+  return `${Math.round(minutes / 1440)}天前`;
+}
+
+function escapeAttribute(value) {
+  return String(value || "#").replace(/[&<>'"]/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
+  })[char]);
 }
 
 function escapeHtml(value) {
