@@ -1,0 +1,339 @@
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+
+:root {
+  --ocean: #55cbd1;
+  --deep: #236c79;
+  --ink: #285c65;
+  --cream: #fff8df;
+  --coral: #f28f9d;
+  --yellow: #f3cd6b;
+  --mint: #67b99f;
+  --paper: #fbf5dc;
+  --shadow: rgba(21, 83, 91, .22);
+}
+
+* { box-sizing: border-box; }
+button, input, textarea { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Noto Sans SC", system-ui, sans-serif;
+  background: #3aaab5;
+  overscroll-behavior: none;
+}
+
+.ocean {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 76% 12%, rgba(255,255,255,.25), transparent 14%),
+    radial-gradient(circle at 17% 20%, rgba(255,255,255,.14), transparent 12%),
+    linear-gradient(180deg, #70dce0 0%, #47c2cb 55%, #3aa8b8 100%);
+}
+
+.grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: .17;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.33'/%3E%3C/svg%3E");
+}
+
+.sun-rays {
+  position: absolute;
+  inset: -20% 0 auto 0;
+  height: 75%;
+  opacity: .18;
+  background: repeating-conic-gradient(from 245deg at 60% 0%, transparent 0 9deg, white 10deg 14deg, transparent 15deg 27deg);
+  filter: blur(8px);
+}
+
+.topbar {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 28px 42px 0;
+}
+
+.eyebrow { margin: 0 0 3px; font-size: 13px; letter-spacing: .12em; opacity: .75; }
+h1 { margin: 0; font-family: "Ma Shan Zheng", cursive; font-size: clamp(30px, 3.2vw, 48px); font-weight: 400; color: #1f6573; text-shadow: 0 1px rgba(255,255,255,.35); }
+
+.day-score {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  border: 2px solid rgba(40,92,101,.38);
+  border-radius: 18px 22px 17px 24px;
+  background: rgba(255,248,223,.54);
+  transform: rotate(1deg);
+}
+.day-score span { font-size: 12px; }
+.day-score strong { font-family: "Ma Shan Zheng"; font-size: 25px; }
+
+.simple-nav {
+  position: relative;
+  z-index: 7;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 15px auto 0;
+}
+.simple-nav button {
+  color: var(--ink);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 7px 12px;
+  background: transparent;
+  cursor: pointer;
+}
+.simple-nav i { display: none; font-style: normal; }
+.simple-nav button:hover { border-color: var(--cream); color: #fff; }
+
+.world { position: relative; min-height: calc(100vh - 134px); z-index: 2; }
+.landmark {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  color: var(--ink);
+  background: none;
+  cursor: pointer;
+  filter: drop-shadow(0 8px 8px rgba(15,89,98,.14));
+  transition: transform .25s ease, filter .25s ease;
+}
+.landmark:hover { transform: translateY(-7px) rotate(-1deg); filter: drop-shadow(0 12px 10px rgba(15,89,98,.2)); }
+.landmark:focus-visible { outline: 3px dashed var(--cream); outline-offset: 8px; }
+.landmark-label {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  transform: translateX(-50%) rotate(-1deg);
+  white-space: nowrap;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 14px;
+  text-shadow: 0 1px rgba(255,255,255,.4);
+}
+.landmark-label b { font-size: 11px; font-weight: 500; opacity: .7; }
+
+.ship { left: 7%; bottom: 19%; width: 260px; height: 150px; }
+.ship .flag { position: absolute; left: 116px; top: 4px; width: 72px; padding: 5px; color: #fff7dc; background: var(--coral); border: 3px solid var(--ink); border-left: 0; font-size: 10px; transform: rotate(2deg); }
+.ship .flag::before { content: ""; position: absolute; left: -5px; top: -6px; width: 4px; height: 90px; background: var(--ink); border-radius: 5px; }
+.ship .cabin { position: absolute; left: 53px; top: 49px; width: 120px; height: 58px; padding-top: 14px; border: 4px solid var(--ink); border-radius: 28px 28px 3px 3px; background: #eff1cc; font-size: 22px; }
+.ship .hull { position: absolute; left: 8px; bottom: 3px; width: 245px; height: 63px; border: 4px solid var(--ink); border-radius: 7px 10px 90px 70px; background: #69ad91; transform: rotate(2deg); }
+.ship .hull i { display: inline-block; width: 17px; height: 17px; margin: 14px 10px; border: 3px solid var(--cream); border-radius: 50%; }
+.ship .wake { position: absolute; left: -24px; bottom: -5px; width: 290px; height: 22px; border-top: 4px solid rgba(255,255,255,.6); border-radius: 50%; }
+
+.notebook { left: 31%; top: 16%; width: 86px; height: 106px; border: 4px solid var(--ink); border-radius: 5px 12px 7px 9px; background: var(--paper); transform: rotate(-5deg); }
+.notebook::before { content: ""; position: absolute; left: 12px; top: -8px; width: 55px; height: 10px; border: 3px solid var(--ink); border-radius: 4px; background: var(--yellow); }
+.paper-lines { position: absolute; left: 18px; top: 22px; line-height: 22px; font-size: 17px; text-align: left; }
+.pencil { position: absolute; right: -19px; bottom: -5px; width: 13px; height: 88px; border: 3px solid var(--ink); background: var(--coral); transform: rotate(16deg); }
+
+.fish-school { left: 47%; top: 28%; width: 160px; height: 100px; }
+.fish { position: absolute; font-size: 31px; color: #3579a3; -webkit-text-stroke: 1px var(--ink); transform: rotate(8deg); }
+.fish::after { content: "•"; color: var(--cream); font-size: 13px; position: absolute; right: 5px; top: 5px; }
+.f1{left:0;top:15px}.f2{left:48px;top:0;font-size:39px}.f3{left:97px;top:25px}.f4{left:25px;top:55px;font-size:26px}.f5{left:74px;top:61px}.f6{left:125px;top:59px;font-size:22px}
+
+.jellyfish { left: 70%; top: 13%; width: 92px; height: 110px; }
+.jelly-body { display: block; height: 64px; padding: 3px; border: 4px solid var(--ink); border-radius: 50% 50% 28% 28%; color: var(--ink); background: rgba(242,143,157,.78); font-size: 42px; transform: rotate(3deg); }
+.tentacles { display: block; margin-top: -4px; font-size: 21px; color: var(--ink); line-height: .8; }
+
+.submarine { right: 8%; top: 37%; width: 145px; height: 73px; }
+.sub-body { display: block; width: 132px; height: 61px; padding-top: 14px; border: 4px solid var(--ink); border-radius: 50% 42% 45% 50%; background: var(--yellow); font-family: "Ma Shan Zheng"; font-size: 24px; }
+.sub-body::before { content: "●  ●"; font-size: 16px; color: #7bc5d5; letter-spacing: 8px; margin-right: 6px; }
+.antenna { position: absolute; left: 52px; top: -29px; font-size: 30px; }
+.bubbles { position: absolute; right: -23px; top: -25px; color: var(--cream); font-size: 26px; }
+
+.bottle { right: 18%; bottom: 17%; width: 75px; height: 132px; border: 4px solid var(--ink); border-radius: 14px 14px 24px 24px; overflow: visible; background: rgba(255,255,255,.23); }
+.bottle-cap { position: absolute; left: 19px; top: -18px; width: 30px; height: 18px; border: 4px solid var(--ink); background: var(--coral); border-radius: 4px 4px 0 0; }
+.water-fill { position: absolute; left: 4px; right: 4px; bottom: 4px; height: 0; border-radius: 0 0 17px 17px; background: rgba(40,123,171,.56); transition: height .5s ease; }
+
+.coral { left: 40%; bottom: 8%; width: 140px; height: 120px; }
+.branch { position: absolute; bottom: 0; width: 18px; border: 4px solid var(--ink); border-radius: 40% 40% 8px 8px; background: var(--coral); transform-origin: bottom; }
+.b1{height:100px;left:62px}.b2{height:78px;left:42px;transform:rotate(-31deg)}.b3{height:72px;left:82px;transform:rotate(35deg)}.b4{height:50px;left:23px;transform:rotate(-58deg);background:var(--yellow)}
+.branch::before { content:""; position:absolute; top:-7px; left:-4px; width:18px; height:18px; border:3px solid var(--ink); border-radius:50%; background:inherit; }
+
+.shell { right: 3%; bottom: 7%; width: 118px; height: 92px; }
+.shell-shape { display:block; color: #f1d6c1; -webkit-text-stroke: 4px var(--ink); font-size: 96px; line-height: 80px; transform: rotate(-10deg); }
+.moon { position:absolute; right:5px; top:-36px; color:var(--cream); font-size:40px; }
+
+.seabed { position: absolute; left: 0; right: 0; bottom: -5px; height: 85px; border-top: 5px solid rgba(35,108,121,.7); background: #69b89e; opacity: .85; }
+.weed { position:absolute; bottom:40px; width:18px; height:70px; border-left:7px solid #318473; border-radius:50%; }
+.w1{left:4%;transform:rotate(-15deg)}.w2{left:26%;height:50px;transform:rotate(18deg)}.w3{right:31%;height:85px;transform:rotate(-8deg)}
+.starfish { position:absolute; left:20%; top:11px; color:var(--yellow); font-size:34px; transform:rotate(19deg); -webkit-text-stroke:2px var(--ink); }
+.stones { position:absolute; right:9%; top:24px; color:#5a8d82; font-size:30px; }
+
+.daily-note { position:absolute; z-index:4; left:50%; bottom:19px; margin:0; transform:translateX(-50%); color:rgba(255,248,223,.9); font-family:"Ma Shan Zheng"; font-size:18px; }
+
+.overlay { position: fixed; z-index: 20; inset: 0; visibility: hidden; opacity: 0; background: rgba(21,75,84,.24); backdrop-filter: blur(2px); transition: .25s ease; }
+.panel {
+  position: fixed;
+  z-index: 21;
+  right: 22px;
+  top: 22px;
+  bottom: 22px;
+  width: min(470px, calc(100vw - 30px));
+  overflow-y: auto;
+  padding: 30px;
+  border: 4px solid var(--ink);
+  border-radius: 27px 21px 30px 24px;
+  background:
+    linear-gradient(rgba(255,248,223,.96), rgba(250,240,209,.97)),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='.12'/%3E%3C/svg%3E");
+  box-shadow: 0 22px 70px rgba(18,70,78,.32);
+  transform: translateX(calc(100% + 50px)) rotate(1deg);
+  transition: transform .35s cubic-bezier(.22,.9,.35,1);
+}
+.panel.open { transform: translateX(0) rotate(0); }
+.overlay.open { visibility: visible; opacity: 1; }
+.close-panel { position:absolute; right:18px; top:14px; width:37px; height:37px; border:2px solid var(--ink); border-radius:50%; color:var(--ink); background:transparent; font-size:25px; cursor:pointer; }
+.panel-heading { display:flex; align-items:center; gap:14px; margin-bottom:25px; padding-right:35px; }
+.panel-heading > span { display:grid; place-items:center; width:52px; height:52px; border:3px solid var(--ink); border-radius:50% 45% 52% 44%; background:var(--yellow); font-size:24px; }
+.panel-heading small { opacity:.65; }
+.panel-heading h2 { margin:1px 0 0; font-family:"Ma Shan Zheng"; font-size:31px; font-weight:400; }
+.panel h3 { margin:25px 0 12px; font-size:15px; }
+
+.summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+.summary-card { padding:14px 10px; border:2px solid rgba(40,92,101,.38); border-radius:17px 13px 19px 14px; background:rgba(255,255,255,.3); }
+.summary-card small,.summary-card span { display:block; font-size:11px; opacity:.65; }
+.summary-card strong { display:block; margin:6px 0 2px; font-size:20px; }
+.mini-list { display:grid; gap:8px; }
+.mini-item { padding:11px 13px; border-left:4px solid var(--coral); background:rgba(255,255,255,.35); border-radius:4px 12px 12px 4px; }
+
+.add-form { display:flex; gap:8px; }
+.add-form input { flex:1; min-width:0; padding:12px 14px; border:2px solid var(--ink); border-radius:14px 11px 15px 10px; color:var(--ink); background:rgba(255,255,255,.48); outline:none; }
+.add-form button,.primary-button { padding:10px 17px; border:2px solid var(--ink); border-radius:12px 15px 11px 16px; color:var(--ink); background:var(--yellow); font-weight:700; cursor:pointer; }
+.task-options { display:flex; justify-content:space-between; margin:10px 2px 18px; font-size:11px; opacity:.7; }
+.task-list { display:grid; gap:9px; }
+.task-item { display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:9px; padding:12px; border:2px solid rgba(40,92,101,.35); border-radius:13px 17px 12px 15px; background:rgba(255,255,255,.3); }
+.task-item.done .task-text { text-decoration:line-through; opacity:.48; }
+.task-item.priority { border-left:6px solid var(--yellow); }
+.task-item button { border:0; background:transparent; color:var(--ink); cursor:pointer; opacity:.6; }
+.task-item input { accent-color:var(--mint); width:17px; height:17px; }
+.empty-list { padding:28px 10px; text-align:center; opacity:.55; }
+
+.word-progress { padding:17px; border:3px solid var(--ink); border-radius:18px 22px 16px 25px; background:rgba(103,185,159,.2); }
+.word-progress strong { font-size:42px; font-family:"Ma Shan Zheng"; }
+.word-progress span { margin-left:5px; }
+.word-progress input { width:100%; margin-top:15px; accent-color:var(--coral); }
+.source-note { padding:11px 13px; border-radius:10px; background:rgba(242,143,157,.14); font-size:12px; line-height:1.7; }
+.skill-checks { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
+.skill-checks label { display:flex; align-items:center; gap:8px; padding:14px; border:2px solid rgba(40,92,101,.35); border-radius:14px; cursor:pointer; }
+.skill-checks input { accent-color:var(--mint); }
+.skill-checks span { font-size:22px; }
+
+.water-meter { display:flex; justify-content:center; align-items:center; gap:28px; padding:10px; }
+.meter-glass { position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; width:105px; height:190px; overflow:hidden; border:4px solid var(--ink); border-radius:18px 18px 35px 35px; background:rgba(255,255,255,.3); }
+.meter-glass > span { position:absolute; left:0; right:0; bottom:0; height:0; background:rgba(71,174,200,.55); transition:height .5s ease; }
+.meter-glass b,.meter-glass small { position:relative; z-index:1; }
+.meter-glass b { font-size:27px; }
+.water-meter > div:last-child strong { font-family:"Ma Shan Zheng"; font-size:45px; }
+.water-meter p { margin:0; font-size:12px; opacity:.65; }
+.water-buttons { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-top:20px; }
+.water-buttons button { padding:13px; border:2px solid var(--ink); border-radius:13px; color:var(--ink); background:rgba(255,255,255,.38); cursor:pointer; }
+.text-button { display:block; margin:14px auto 0; border:0; background:transparent; color:var(--ink); font-size:12px; text-decoration:underline; cursor:pointer; opacity:.65; }
+
+.moods { display:flex; gap:9px; margin:9px 0 22px; }
+.moods button { width:55px; height:48px; border:2px solid transparent; border-radius:13px; background:rgba(255,255,255,.4); font-size:22px; cursor:pointer; }
+.moods button.selected { border-color:var(--ink); background:var(--yellow); }
+.field-label { display:block; font-weight:600; font-size:13px; }
+textarea { width:100%; margin:9px 0 14px; padding:13px; resize:vertical; border:2px solid var(--ink); border-radius:15px; color:var(--ink); background:rgba(255,255,255,.42); outline:none; }
+.save-hint { min-height:20px; color:var(--mint); font-size:12px; }
+
+.empty-state { padding:48px 16px; text-align:center; }
+.empty-state > span { display:block; font-size:66px; color:var(--coral); }
+.empty-state h3 { font-size:19px; }
+.empty-state p { max-width:320px; margin:0 auto 24px; font-size:13px; line-height:1.8; opacity:.72; }
+
+@media (max-width: 850px) {
+  .topbar { padding:20px 20px 0; }
+  .day-score span { display:none; }
+  .simple-nav { overflow-x:auto; justify-content:flex-start; padding:0 14px 5px; }
+  .world { min-height:720px; transform-origin:top left; }
+  .ship { left:4%; bottom:19%; transform:scale(.8); }
+  .notebook { left:12%; top:12%; }
+  .fish-school { left:42%; top:24%; }
+  .jellyfish { left:72%; top:8%; }
+  .submarine { right:3%; top:43%; transform:scale(.8); }
+  .bottle { right:20%; bottom:18%; }
+  .coral { left:35%; bottom:8%; }
+  .shell { right:1%; bottom:6%; transform:scale(.8); }
+  .daily-note { display:none; }
+}
+
+@media (max-width: 540px) {
+  body { min-height: 100dvh; }
+  .ocean { min-height: 100dvh; overflow: hidden; padding-top: env(safe-area-inset-top); }
+  .topbar { align-items: center; padding: 13px 17px 0; }
+  .eyebrow { font-size: 11px; }
+  h1 { font-size:28px; }
+  .day-score { padding:6px 9px; }
+  .day-score strong { font-size: 20px; }
+  .simple-nav {
+    position: fixed;
+    z-index: 18;
+    left: 10px;
+    right: 10px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin: 0;
+    padding: 7px 6px;
+    overflow: visible;
+    border: 2px solid rgba(40,92,101,.52);
+    border-radius: 20px;
+    background: rgba(255,248,223,.88);
+    box-shadow: 0 10px 35px rgba(21,75,84,.24);
+    backdrop-filter: blur(14px);
+  }
+  .simple-nav button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    min-height: 43px;
+    padding: 3px 2px;
+    border: 0;
+    border-radius: 11px;
+    font-size: 10px;
+  }
+  .simple-nav button:active { background: rgba(85,203,209,.25); }
+  .simple-nav i { display: block; font-size: 16px; line-height: 20px; }
+  .panel {
+    inset: auto 7px calc(7px + env(safe-area-inset-bottom));
+    width:auto;
+    max-height: calc(100dvh - env(safe-area-inset-top) - 14px);
+    padding:24px 20px calc(28px + env(safe-area-inset-bottom));
+    border-radius: 26px 26px 18px 18px;
+    transform: translateY(calc(100% + 25px));
+  }
+  .panel.open { transform: translateY(0); }
+  .summary-grid { grid-template-columns:1fr; }
+  .world { min-width: 0; min-height: calc(100dvh - 86px); transform: none; }
+  .landmark-label { font-size: 12px; }
+  .ship { left: -21px; bottom: 21%; transform: scale(.61); }
+  .ship:hover { transform: scale(.61) translateY(-5px); }
+  .notebook { left: 9%; top: 10%; transform: scale(.7) rotate(-5deg); }
+  .notebook:hover { transform: scale(.7) translateY(-5px) rotate(-5deg); }
+  .fish-school { left: 40%; top: 20%; transform: scale(.72); }
+  .fish-school:hover { transform: scale(.72) translateY(-5px); }
+  .jellyfish { left: auto; right: 9%; top: 8%; transform: scale(.65); }
+  .jellyfish:hover { transform: scale(.65) translateY(-5px); }
+  .submarine { right: -20px; top: 40%; transform: scale(.62); }
+  .submarine:hover { transform: scale(.62) translateY(-5px); }
+  .bottle { right: 18%; bottom: 23%; transform: scale(.65); }
+  .bottle:hover { transform: scale(.65) translateY(-5px); }
+  .coral { left: 38%; bottom: 15%; transform: scale(.62); }
+  .coral:hover { transform: scale(.62) translateY(-5px); }
+  .shell { right: -12px; bottom: 13%; transform: scale(.62); }
+  .shell:hover { transform: scale(.62) translateY(-5px); }
+  .seabed { bottom: 73px; }
+  .daily-note { display: block; bottom: 102px; width: 100%; text-align: center; font-size: 15px; }
+}

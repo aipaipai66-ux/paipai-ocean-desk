@@ -1,0 +1,11 @@
+{
+  "name": "派派的海底工作台",
+  "short_name": "派派工作台",
+  "description": "派派的个人海底工作台",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#55cbd1",
+  "theme_color": "#55cbd1",
+  "orientation": "portrait-primary"
+}
